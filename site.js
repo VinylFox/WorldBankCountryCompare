@@ -1,27 +1,78 @@
 var countryListUrl = 'https://finances.worldbank.org/views/rbxa-eznj/rows.json?jsonp=?',
-	summaryDataUrl = 'https://finances.worldbank.org/views/i7mn-cgpk/rows.json?jsonp=?'
+	summaryDataUrl = 'https://finances.worldbank.org/views/i7mn-cgpk/rows.json?jsonp=?',
+	countryDataUrl = 'https://finances.worldbank.org/resource/sfv5-tf7p.json?$jsonp=?&country=',
+	loanStatusesUrl = 'https://finances.worldbank.org/views/jxks-acyi/rows.json?jsonp=?',
+	countryA,
+	countryB,
+	countryItems = '',
+	topDebtCountry,
+	topLoanCountry,
+	totalCountries = 0,
+	totalLoanAmt = 0,
+	totalRepaidAmt = 0,
+	totalRemainAmt = 0,
+	countryLookup = {},
+	statuses = {},
 
-wbLoanCompare = {
-	init: function() {
-		var ME = this,
-			countryItems = '',
-			countryA,
-			countryB,
-			topDebtCountry,
-			topLoanCountry,
-			totalCountries = 0,
-			totalLoanAmt = 0,
-			totalRepaidAmt = 0,
-			totalRemainAmt = 0;
-		$.getJSON(countryListUrl).done(function(data) {
+	spinnerSettings = {
+		lines: 11,
+		length: 0,
+		width: 30,
+		radius: 20,
+		corners: 1.0,
+		rotate: 0,
+		trail: 67,
+		speed: 1.0,
+		direction: 1,
+		shadow: true
+	},
+
+	wbLoanCompare = {
+		init: function() {
+
+			$.getJSON(countryListUrl).done(this.handleCountryListData);
+			$.getJSON(summaryDataUrl).done(this.handleSummaryData);
+			$.getJSON(loanStatusesUrl).done(this.handleStatusesData);
+
+			this.setupSelectionMaps();
+
+		},
+		setupSelectionMaps: function(){
+			jQuery('div.map_a').vectorMap({
+				map: 'world_en',
+				backgroundColor: '#fff',
+				onRegionClick: wbLoanCompare.countryClick
+			});
+
+			jQuery('div.map_b').vectorMap({
+				map: 'world_en',
+				backgroundColor: '#fff',
+				onRegionClick: wbLoanCompare.countryClick
+			});
+		},
+		handleStatusesData: function(data){
+			$.each(data.data, function(i, item) {
+				statuses[item[8]] = {
+					principal: item[9],
+					cancelled: item[10],
+					undisbursed: item[11],
+					disbursed: item[12],
+					repaid: item[13],
+					due: item[14]
+				}
+			});
+		},
+		handleCountryListData: function(data) {
 			$.each(data.data, function(i, item) {
 				if (item[8]) {
 					totalCountries++;
 					countryItems = countryItems + '<li><a href="#">' + item[8] + '</a></li>';
+					countryLookup[item[8]] = true;
 				}
 			});
 			$("ul.country_select_a").append(countryItems);
 			$("ul.country_select_b").append(countryItems);
+			$("span.loan_country_count").html(totalCountries);
 			$("ul.dropdown-menu li a").click(function(evt) {
 				var countryName = evt.currentTarget.innerHTML,
 					target = $(arguments[0].currentTarget);
@@ -32,22 +83,20 @@ wbLoanCompare = {
 
 				if (target.parents('ul.country_select_b').length) {
 					countryB = countryName;
-				} else if (target.parents('ul.country_select_a').length){
+				} else if (target.parents('ul.country_select_a').length) {
 					countryA = countryName;
 				}
 
-				if (countryA && countryB && countryA != countryB) {
-					ME.startCountryComparison(countryA, countryB);
-				}
+				this.checkCountrySelections(countryA, countryB);
 			});
-		});
-		$.getJSON(summaryDataUrl).done(function(data) {
+		},
+		handleSummaryData: function(data) {
 			$.each(data.data, function(i, item) {
 				if (i < 1) {
 					topLoanCountry = item;
 					topDebtCountry = item;
 				}
-				
+
 				if (parseFloat(topLoanCountry[12]) < parseFloat(item[12])) {
 					topLoanCountry = item;
 				}
@@ -63,107 +112,64 @@ wbLoanCompare = {
 			$("span.loan_country_name").html(topLoanCountry[8]);
 			$("span.loan_country_amt").html(pretty_number(topLoanCountry[12]));
 
-			$("span.loan_country_count").html(totalCountries);
 			$("span.loan_country_total").html(pretty_number(totalLoanAmt));
 			$("span.loan_country_repay").html(pretty_number(totalRepaidAmt));
 			$("span.loan_country_remain").html(pretty_number(totalRemainAmt));
 
-		});
-	},
-	startCountryComparison: function(){
-
-	}
-};
-
-wbLoanCompare.init();
-
-function pretty_number(num, opts) {
-	var defaultOpts = {
-		short: true,
-		lowerCase: false,
-		addCommas: true,
-		round: 2
+		},
+		isCountryInWorldBank: function(country){
+			return !!countryLookup[country];
+		},
+		checkCountrySelections: function(countryA, countryB){
+			if (countryA && countryB && countryA == countryB){
+				alert('Please select two different countries to compare');
+			} else{
+				if (countryA && countryB) {
+					wbLoanCompare.startCountryComparison(countryA, countryB);
+				}
+			}
+		},
+		startCountryComparison: function(countryA, countryB) {
+			$('div.country_overview').removeClass('hidden');
+			this.getCountryData(countryA, 'a');
+			$('div.country_a_overview').append(new Spinner(spinnerSettings).spin().el);
+			this.getCountryData(countryB, 'b');
+			$('div.country_b_overview').append(new Spinner(spinnerSettings).spin().el);
+		},
+		countryClick: function(element, code, region) {
+			if (wbLoanCompare.isCountryInWorldBank(region)){
+				if (element.target.className.indexOf('map_b') > 0){
+					countryB = region;
+					$('.country_select_b_name').html(region);
+				} else if (element.target.className.indexOf('map_a') > 0){
+					countryA = region;
+					$('.country_select_a_name').html(region);
+				}
+				wbLoanCompare.checkCountrySelections(countryA, countryB);
+			}else{
+				alert('Sorry, but '+region+' does not have any loans from the World Bank');
+			}
+		},
+		getCountryData: function(country, position){
+			$.getJSON(countryDataUrl + country).done(function(data){
+				var summaryData = {
+					first_agreement_signing_date: '',
+					last_agreement_signing_date: '',
+					borrowers: [],
+					borrower_count: {},
+					projects: [],
+					project_count: {},
+					disbursed_amount: 0,
+					status_details: JSON.parse(JSON.stringify(statuses))
+				};
+				$('div.country_'+position+'_overview').children('.spinner').remove();
+				$.each(data, function(i, item) {
+					summaryData.disbursed_amount =+ item.disbursed_amount;
+					$('div.country_'+position+'_overview').children('.total_loaned').html(summaryData.disbursed_amount);
+				});
+				console.log(summaryData);
+			});
+		}
 	};
 
-	if (typeof num != "number") {
-		num = parseFloat(num);
-	}
-
-	function round(num, dec) {
-		num = num * Math.pow(10, dec);
-
-		num = Math.round(num);
-
-		num /= Math.pow(10, dec);
-
-		return num;
-	}
-
-	if (typeof opts == 'undefined') {
-		opts = {};
-	}
-
-	for (var i in defaultOpts) {
-		opts[i] = (typeof opts[i] != 'undefined') ? opts[i] : defaultOpts[i];
-	}
-
-	if (opts.short) {
-		var decimal_places = Math.floor(Math.log(num) / Math.log(10));
-
-		var dec = [{
-			'suffix': 'T',
-			'divisor': 12
-		}, {
-			'suffix': 'B',
-			'divisor': 9
-		}, {
-			'suffix': 'M',
-			'divisor': 6
-		}, {
-			'suffix': 'K',
-			'divisor': 3
-		}, {
-			'suffix': '',
-			'divisor': 0
-		}];
-
-		for (var i in dec) {
-			if (decimal_places > dec[i].divisor) {
-				num = round((num / Math.pow(10, dec[i].divisor)), 2 - (decimal_places - dec[i].divisor));
-
-				if (num >= 1000 && i > 0) {
-					decimal_places -= 3;
-					num = round(num / 1000, 2 - (decimal_places - dec[i - 1].divisor));
-					num += dec[i - 1].suffix;
-				} else {
-					num += dec[i].suffix;
-				}
-
-				break;
-			}
-		}
-
-		num = '' + num;
-
-		if (opts.lowerCase) {
-			num = num.toLowerCase();
-		}
-	} else if (opts.addCommas) {
-		var decnum = ('' + (round(num, opts.round) - Math.floor(num))).substr(2);
-
-		var tempnum = '' + Math.floor(num);
-		num = '';
-		for (i = tempnum.length - 1, j = 0; i >= 0; i--, j++) {
-			if (j > 0 && j % 3 == 0) {
-				num = ',' + num;
-			}
-			num = tempnum[i] + num;
-		}
-
-		if (decnum > 0) {
-			num = num + '.' + decnum;
-		}
-	}
-
-	return num;
-}
+wbLoanCompare.init();

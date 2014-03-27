@@ -21,6 +21,7 @@
 
     <!-- Custom styles for this template -->
     <link href="styles.css" rel="stylesheet">
+    <link href="bower_components/jqvmap/jqvmap/jqvmap.css" rel="stylesheet">
   </head>
 <!-- NAVBAR
 ================================================== -->
@@ -42,14 +43,14 @@
             <div class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Choose First Country <b class="caret"></b></a>
+                  <a href="#" class="dropdown-toggle country_select_a_name" data-toggle="dropdown">Choose First Country <b class="caret"></b></a>
                   <ul class="dropdown-menu country_select_a" style="height: 300px; overflow-y: scroll;">
                     <li><a href="#" class="nonselection">Select a country</a></li>
                     <li class="divider"></li>
                   </ul>
                 </li>
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Choose Second Country <b class="caret"></b></a>
+                  <a href="#" class="dropdown-toggle country_select_b_name" data-toggle="dropdown">Choose Second Country <b class="caret"></b></a>
                   <ul class="dropdown-menu country_select_b" style="height: 300px; overflow-y: scroll;">
                     <li><a href="#" class="nonselection">Select a country</a></li>
                     <li class="divider"></li>
@@ -78,9 +79,9 @@
           <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
           <div class="container">
             <div class="carousel-caption">
-              <h1>Start comparing the finances of countries... </h1>
+              <h1>Start Comparing World Bank Loans </h1>
               <p>&nbsp;</p>
-              <p>Select Two Countries From The Menu Above</p>
+              <p>Select countries from the menus or the maps.</p>
               <p>&nbsp;</p>
             </div>
           </div>
@@ -90,7 +91,7 @@
           <div class="container">
             <div class="carousel-caption">
               <h1>Ever hear of <span class="debt_country_name"></span> and <span class="loan_country_name"></span>?</h1>
-              <p>It turns out that <span class="debt_country_name"></span> owes the most amount of money to the World Bank, totaling $<span class="debt_country_amt"></span>, and <span class="loan_country_name"></span> tops the list as the country to recieve the largest sum of loans from the World Bank, at $<span class="loan_country_amt"></span>.</p>
+              <p>Of course you have! It turns out that <span class="debt_country_name"></span> owes the most amount of money to the World Bank, totaling $<span class="debt_country_amt"></span>, and <span class="loan_country_name"></span> tops the list as the country to recieve the largest sum of loans from the World Bank, at $<span class="loan_country_amt"></span>.</p>
               <p>&nbsp;</p>
             </div>
           </div>
@@ -100,7 +101,7 @@
           <div class="container">
             <div class="carousel-caption">
               <h1>The World Bank has some dough!</h1>
-              <p>The World Bank has loaned money to <span class="loan_country_count"></span> countries, with a grand total of $<span class="loan_country_total"></span>. These countries have paid back a total of $<span class="loan_country_repay"></span> of their loans, leaving $<span class="loan_country_remain"></span> still due to the World Bank.</p>
+              <p>Big deep pockets! The World Bank has loaned money to <span class="loan_country_count"></span> countries, with a grand total of $<span class="loan_country_total"></span> loaned. These countries have paid back a total of $<span class="loan_country_repay"></span> of their loans, leaving $<span class="loan_country_remain"></span> still due to the World Bank.</p>
               <p>&nbsp;</p>
             </div>
           </div>
@@ -110,16 +111,57 @@
       <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
     </div><!-- /.carousel -->
 
+  <div class="container marketing maps">
+    <div class="row">
+      <div class="col-md-6 map_a">
+
+      </div>
+      <div class="col-md-6 map_b">
+
+      </div>
+    </div>
+  </div>
 
 
     <!-- Marketing messaging and featurettes
     ================================================== -->
     <!-- Wrap the rest of the page in another container to center all the content. -->
 
-    <div class="container marketing hidden">
+    <div class="container marketing">
+
+      <!-- START THE FEATURETTES -->
+
+      <hr class="featurette-divider hidden">
+
+      <div class="row featurette country_overview hidden">
+        <div class="col-md-6 country_a_overview">
+          <h2 class="featurette-heading country_select_a_name"></h2>
+          <p class="total_loaned">&nbsp;</p>
+          <p class="total_due">&nbsp;</p>
+        </div>
+        <div class="col-md-6 country_b_overview">
+          <h2 class="featurette-heading country_select_b_name"></h2>
+          <p class="total_loaned">&nbsp;</p>
+          <p class="total_due">&nbsp;</p>
+        </div>
+      </div>
+
+      <hr class="featurette-divider hidden">
+
+      <div class="row featurette hidden">
+        <div class="col-md-5">
+          <img class="featurette-image img-responsive" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+        </div>
+        <div class="col-md-7">
+          <h2 class="featurette-heading">Oh yeah, it's that good. <span class="text-muted">See for yourself.</span></h2>
+          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+        </div>
+      </div>
+
+      <hr class="featurette-divider hidden">
 
       <!-- Three columns of text below the carousel -->
-      <div class="row">
+      <div class="row hidden">
         <div class="col-lg-4">
           <img class="img-circle" data-src="holder.js/140x140" alt="Generic placeholder image">
           <h2>Heading</h2>
@@ -140,36 +182,9 @@
         </div><!-- /.col-lg-4 -->
       </div><!-- /.row -->
 
+      <hr class="featurette-divider hidden">
 
-      <!-- START THE FEATURETTES -->
-
-      <hr class="featurette-divider">
-
-      <div class="row featurette">
-        <div class="col-md-7">
-          <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It'll blow your mind.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-        <div class="col-md-5">
-          <img class="featurette-image img-responsive" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
-        </div>
-      </div>
-
-      <hr class="featurette-divider">
-
-      <div class="row featurette">
-        <div class="col-md-5">
-          <img class="featurette-image img-responsive" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
-        </div>
-        <div class="col-md-7">
-          <h2 class="featurette-heading">Oh yeah, it's that good. <span class="text-muted">See for yourself.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-      </div>
-
-      <hr class="featurette-divider">
-
-      <div class="row featurette">
+      <div class="row featurette hidden">
         <div class="col-md-7">
           <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
           <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
@@ -198,6 +213,10 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/jqvmap/jqvmap/jquery.vmap.min.js"></script>
+    <script src="bower_components/jqvmap/jqvmap/maps/jquery.vmap.world.js"></script>
+    <script src="bower_components/spin.js/spin.js"></script>
+    <script src="pretty_number.js"></script>
     <script src="site.js"></script>
   </body>
 </html>
