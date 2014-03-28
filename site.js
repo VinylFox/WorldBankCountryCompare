@@ -38,17 +38,9 @@ var countryListUrl = 'https://finances.worldbank.org/views/rbxa-eznj/rows.json?j
 
 		},
 		setupSelectionMaps: function(){
-			jQuery('div.map_a').vectorMap({
-				map: 'world_en',
-				backgroundColor: '#fff',
-				onRegionClick: wbLoanCompare.countryClick
-			});
+			jQuery('div.map_a').vectorMap(vmapConfig);
 
-			jQuery('div.map_b').vectorMap({
-				map: 'world_en',
-				backgroundColor: '#fff',
-				onRegionClick: wbLoanCompare.countryClick
-			});
+			jQuery('div.map_b').vectorMap(vmapConfig);
 		},
 		handleStatusesData: function(data){
 			$.each(data.data, function(i, item) {
@@ -131,6 +123,7 @@ var countryListUrl = 'https://finances.worldbank.org/views/rbxa-eznj/rows.json?j
 		},
 		startCountryComparison: function(countryA, countryB) {
 			$('div.country_overview').removeClass('hidden');
+			$('hr.overview').removeClass('hidden');
 			this.getCountryData(countryA, 'a');
 			$('div.country_a_overview').append(new Spinner(spinnerSettings).spin().el);
 			this.getCountryData(countryB, 'b');
@@ -152,24 +145,71 @@ var countryListUrl = 'https://finances.worldbank.org/views/rbxa-eznj/rows.json?j
 		},
 		getCountryData: function(country, position){
 			$.getJSON(countryDataUrl + country).done(function(data){
-				var summaryData = {
-					first_agreement_signing_date: '',
-					last_agreement_signing_date: '',
-					borrowers: [],
-					borrower_count: {},
-					projects: [],
-					project_count: {},
-					disbursed_amount: 0,
-					status_details: JSON.parse(JSON.stringify(statuses))
-				};
+				var summaryData = {},
+					bubbleData = [],
+					dataPoints = [
+						'project_name',
+						'loan_type',
+						'borrower'
+					];
 				$('div.country_'+position+'_overview').children('.spinner').remove();
+
 				$.each(data, function(i, item) {
 					summaryData.disbursed_amount =+ item.disbursed_amount;
-					$('div.country_'+position+'_overview').children('.total_loaned').html(summaryData.disbursed_amount);
+					summaryData.due_to_ibrd =+ item.due_to_ibrd;
+					summaryData.repaid_to_ibrd =+ item.repaid_to_ibrd;
+					$.each(dataPoints, function(i, point){
+						wbLoanCompare.addToSummaryData(summaryData, point, item[point], item.disbursed_amount);
+					});
+					$('div.country_'+position+'_overview').children('.total_loaned').html('Loaned: $'+pretty_number(summaryData.disbursed_amount));
+					$('div.country_'+position+'_overview').children('.total_due').html('Outstanding: $'+pretty_number(summaryData.due_to_ibrd));
+					$('div.country_'+position+'_overview').children('.total_repaid').html('Repaid: $'+pretty_number(summaryData.repaid_to_ibrd));
 				});
-				console.log(summaryData);
+				$.each(dataPoints, function(i, point){
+					$.each(summaryData[point], function(i, detail){
+						bubbleData.push({
+							className: detail || 'Not stated',
+							packageName: point,
+							value: summaryData[point+'_amount'][detail]
+						});
+					})
+				});
+
+				$('hr.bubble').removeClass('hidden');
+				$('div.bubble').removeClass('hidden');
+				$('div.bubble_'+position).removeClass('hidden');
+				bubble({children:bubbleData}, 'div.bubble_'+position);
+				
 			});
+		},
+		addToSummaryData: function(data, summary, point, value){
+			if (!data[summary]){
+				data[summary] = [];
+				data[summary+'_count'] = {};
+				data[summary+'_amount'] = {};
+			}
+			if (data[summary].indexOf(point) == -1){
+				data[summary].push(point);
+			}
+			if (data[summary+'_amount'][point]){
+				data[summary+'_amount'][point] =+ parseFloat(value);
+			}else{
+				data[summary+'_amount'][point] = parseFloat(value);
+			}
+			if (data[summary+'_count'][point]){
+				data[summary+'_count'][point] =+ 1;
+			}else{
+				data[summary+'_count'][point] = 1;
+			}
 		}
+	},
+
+	vmapConfig = {
+		map: 'world_en',
+		backgroundColor: '#fff',
+		color: '#5a5a5a',
+		selectedColor: '#2a6496',
+		onRegionClick: wbLoanCompare.countryClick
 	};
 
 wbLoanCompare.init();

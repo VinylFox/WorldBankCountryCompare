@@ -23,48 +23,7 @@
     <link href="styles.css" rel="stylesheet">
     <link href="bower_components/jqvmap/jqvmap/jqvmap.css" rel="stylesheet">
   </head>
-<!-- NAVBAR
-================================================== -->
   <body>
-    <div class="navbar-wrapper">
-      <div class="container">
-
-        <div class="navbar navbar-inverse navbar-static-top" role="navigation">
-          <div class="container">
-            <div class="navbar-header">
-              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
-              <a class="navbar-brand" href="#">World Bank Country Loan Comparison: </a>
-            </div>
-            <div class="navbar-collapse collapse">
-              <ul class="nav navbar-nav">
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle country_select_a_name" data-toggle="dropdown">Choose First Country <b class="caret"></b></a>
-                  <ul class="dropdown-menu country_select_a" style="height: 300px; overflow-y: scroll;">
-                    <li><a href="#" class="nonselection">Select a country</a></li>
-                    <li class="divider"></li>
-                  </ul>
-                </li>
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle country_select_b_name" data-toggle="dropdown">Choose Second Country <b class="caret"></b></a>
-                  <ul class="dropdown-menu country_select_b" style="height: 300px; overflow-y: scroll;">
-                    <li><a href="#" class="nonselection">Select a country</a></li>
-                    <li class="divider"></li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-
     <!-- Carousel
     ================================================== -->
     <div id="myCarousel" class="carousel slide" data-ride="carousel">
@@ -111,6 +70,32 @@
       <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
     </div><!-- /.carousel -->
 
+  <div class="container marketing nav">
+    <div class="row">
+      <div class="col-md-6">
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle country_select_a_name" data-toggle="dropdown">Choose First Country <b class="caret"></b></a>
+            <ul class="dropdown-menu country_select_a" style="height: 300px; overflow-y: scroll;">
+              <li><a href="#" class="nonselection">Select a country</a></li>
+              <li class="divider"></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle country_select_b_name" data-toggle="dropdown">Choose Second Country <b class="caret"></b></a>
+            <ul class="dropdown-menu country_select_b" style="height: 300px; overflow-y: scroll;">
+              <li><a href="#" class="nonselection">Select a country</a></li>
+              <li class="divider"></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+  </div>
+
   <div class="container marketing maps">
     <div class="row">
       <div class="col-md-6 map_a">
@@ -122,7 +107,6 @@
     </div>
   </div>
 
-
     <!-- Marketing messaging and featurettes
     ================================================== -->
     <!-- Wrap the rest of the page in another container to center all the content. -->
@@ -131,66 +115,48 @@
 
       <!-- START THE FEATURETTES -->
 
-      <hr class="featurette-divider hidden">
+      <hr class="featurette-divider overview hidden">
 
       <div class="row featurette country_overview hidden">
         <div class="col-md-6 country_a_overview">
-          <h2 class="featurette-heading country_select_a_name"></h2>
-          <p class="total_loaned">&nbsp;</p>
-          <p class="total_due">&nbsp;</p>
+          <h1 class="featurette-heading country_select_a_name"></h1>
+          <h2 class="total_loaned">&nbsp;</h2>
+          <h2 class="total_due">&nbsp;</h2>
+          <h2 class="total_repaid">&nbsp;</h2>
         </div>
         <div class="col-md-6 country_b_overview">
-          <h2 class="featurette-heading country_select_b_name"></h2>
-          <p class="total_loaned">&nbsp;</p>
-          <p class="total_due">&nbsp;</p>
+          <h1 class="featurette-heading country_select_b_name"></h1>
+          <h2 class="total_loaned">&nbsp;</h2>
+          <h2 class="total_due">&nbsp;</h2>
+          <h2 class="total_repaid">&nbsp;</h2>
         </div>
       </div>
 
-      <hr class="featurette-divider hidden">
+      <hr class="featurette-divider bubble hidden">
 
-      <div class="row featurette hidden">
-        <div class="col-md-5">
-          <img class="featurette-image img-responsive" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
-        </div>
-        <div class="col-md-7">
-          <h2 class="featurette-heading">Oh yeah, it's that good. <span class="text-muted">See for yourself.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
+      <div class="container marketing bubble hidden">
+        <div class="row">
+          <h1>Where does it go?</h1>
+          <div class="col-md-6 bubble_a">
+
+          </div>
+          <div class="col-md-6 bubble_b">
+
+          </div>
         </div>
       </div>
 
-      <hr class="featurette-divider hidden">
+      <hr class="featurette-divider timeline hidden">
 
-      <!-- Three columns of text below the carousel -->
-      <div class="row hidden">
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140" alt="Generic placeholder image">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140" alt="Generic placeholder image">
-          <h2>Heading</h2>
-          <p>Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-        <div class="col-lg-4">
-          <img class="img-circle" data-src="holder.js/140x140" alt="Generic placeholder image">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div><!-- /.col-lg-4 -->
-      </div><!-- /.row -->
+      <div class="container marketing timeline hidden">
+        <div class="row">
+          <h1>When did they need it?</h1>
+          <div class="col-md-6 timeline_a">
 
-      <hr class="featurette-divider hidden">
+          </div>
+          <div class="col-md-6 timeline_b">
 
-      <div class="row featurette hidden">
-        <div class="col-md-7">
-          <h2 class="featurette-heading">And lastly, this one. <span class="text-muted">Checkmate.</span></h2>
-          <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-        </div>
-        <div class="col-md-5">
-          <img class="featurette-image img-responsive" data-src="holder.js/500x500/auto" alt="Generic placeholder image">
+          </div>
         </div>
       </div>
 
@@ -216,7 +182,9 @@
     <script src="bower_components/jqvmap/jqvmap/jquery.vmap.min.js"></script>
     <script src="bower_components/jqvmap/jqvmap/maps/jquery.vmap.world.js"></script>
     <script src="bower_components/spin.js/spin.js"></script>
+    <script src="bower_components/d3/d3.min.js"></script>
     <script src="pretty_number.js"></script>
+    <script src="bubble.js"></script>
     <script src="site.js"></script>
   </body>
 </html>
